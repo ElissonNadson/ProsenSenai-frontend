@@ -138,19 +138,19 @@ const StageAttachmentsManager: React.FC<StageAttachmentsManagerProps> = ({
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-1">
-            Anexos da Etapa
+            📎 Anexos da Etapa
           </h4>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Adicione pelo menos um dos itens abaixo (arquivos ou links)
+            <strong>Arraste arquivos</strong> diretamente nas opções abaixo ou <strong>clique nos botões</strong> para selecionar
           </p>
         </div>
         {attachments.length > 0 && (
           <div className="flex items-center gap-2 px-3 py-1.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-sm font-medium">
             <CheckCircle className="w-4 h-4" />
-            {attachments.length} {attachments.length === 1 ? 'arquivo' : 'arquivos'}
+            {attachments.length} {attachments.length === 1 ? 'item' : 'itens'}
           </div>
         )}
       </div>
@@ -180,8 +180,8 @@ const StageAttachmentsManager: React.FC<StageAttachmentsManagerProps> = ({
                 hasAttachment
                   ? 'border-green-400 dark:border-green-600 bg-green-50 dark:bg-green-900/10'
                   : dragOver === option.id
-                  ? 'border-indigo-400 dark:border-indigo-600 bg-indigo-50 dark:bg-indigo-900/10'
-                  : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'
+                  ? 'border-indigo-400 dark:border-indigo-600 bg-indigo-50 dark:bg-indigo-900/10 scale-105 shadow-lg'
+                  : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
               onDragOver={(e) => {
                 if (option.type === 'file') {
@@ -222,7 +222,7 @@ const StageAttachmentsManager: React.FC<StageAttachmentsManagerProps> = ({
                       />
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 rounded-lg text-xs font-medium cursor-pointer hover:bg-indigo-200 dark:hover:bg-indigo-900/50 transition-colors">
                         <Upload className="w-3.5 h-3.5" />
-                        Escolher arquivo
+                        {dragOver === option.id ? 'Solte aqui!' : 'Escolher ou Arrastar'}
                       </span>
                     </label>
                   ) : (

@@ -40,6 +40,7 @@ interface ProjectPhase {
   title: string
   icon: any
   placeholder: string
+  explanation: string
   description: string
   status: 'pending' | 'in-progress' | 'completed'
   currentStep: number  // Etapa atual (ex: 4)
@@ -57,6 +58,7 @@ const PROJECT_PHASES = [
     title: 'Ideação', 
     icon: Lightbulb, 
     placeholder: 'Descreva como surgiu a ideia, brainstorming realizado, problema identificado e planejamento inicial...',
+    explanation: 'Fase inicial onde você identifica o problema, gera ideias através de técnicas criativas como Crazy 8, Mapa Mental e define a proposta de valor do projeto.',
     ordem: 1
   },
   { 
@@ -64,6 +66,7 @@ const PROJECT_PHASES = [
     title: 'Modelagem', 
     icon: Settings, 
     placeholder: 'Explique a modelagem do negócio, análise de viabilidade, definição de requisitos e arquitetura do projeto...',
+    explanation: 'Fase de planejamento detalhado onde você estrutura o modelo de negócio, analisa viabilidade, riscos e define cronograma de execução.',
     ordem: 2
   },
   { 
@@ -71,6 +74,7 @@ const PROJECT_PHASES = [
     title: 'Prototipagem', 
     icon: Code, 
     placeholder: 'Conte sobre os protótipos criados, wireframes, mockups, testes de usabilidade e feedback recebido...',
+    explanation: 'Fase de criação de protótipos para validar ideias. Desenvolva wireframes, mockups, protótipos interativos ou maquetes físicas para testar conceitos.',
     ordem: 3
   },
   { 
@@ -78,6 +82,7 @@ const PROJECT_PHASES = [
     title: 'Implementação', 
     icon: Rocket, 
     placeholder: 'Descreva a implementação final, tecnologias utilizadas, desenvolvimento, testes e resultados obtidos...',
+    explanation: 'Fase final onde o projeto é desenvolvido e testado. Registre testes, feedbacks de usuários e apresente os resultados através de vídeo pitch.',
     ordem: 4
   }
 ]
@@ -127,10 +132,10 @@ const TimelineProgressStep: React.FC<TimelineProgressStepProps> = ({
             uuid: savedPhase.uuid,
             isSaved: savedPhase.isSaved || false,
             attachments: savedPhase.attachments || [],
-            isExpanded: savedPhase.isExpanded || false
+            isExpanded: savedPhase.isExpanded !== undefined ? savedPhase.isExpanded : true // Auto-expand by default
           })
         } else {
-          // Cria fase nova se não existir
+          // Cria fase nova se não existir - expandida por padrão
           result.push({
             ...defaultPhase,
             description: '',
@@ -139,7 +144,7 @@ const TimelineProgressStep: React.FC<TimelineProgressStepProps> = ({
             totalSteps: 10,
             isSaved: false,
             attachments: [],
-            isExpanded: false
+            isExpanded: true // Auto-expand by default
           })
         }
       })
@@ -147,7 +152,7 @@ const TimelineProgressStep: React.FC<TimelineProgressStepProps> = ({
       return result
     }
     
-    // Se não há etapas salvas, cria as 4 fases fixas
+    // Se não há etapas salvas, cria as 4 fases fixas - todas expandidas
     return PROJECT_PHASES.map((phase) => ({
       ...phase,
       description: '',
@@ -156,7 +161,7 @@ const TimelineProgressStep: React.FC<TimelineProgressStepProps> = ({
       totalSteps: 10,
       isSaved: false,
       attachments: [],
-      isExpanded: false
+      isExpanded: true // Auto-expand by default
     }))
   }
 
@@ -375,10 +380,12 @@ const TimelineProgressStep: React.FC<TimelineProgressStepProps> = ({
               </p>
               <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-2 leading-relaxed">
                 <li>• <strong>4 Fases Fixas:</strong> Ideação → Modelagem → Prototipagem → Implementação</li>
+                <li>• <strong>Cada fase explica o que deve ser feito:</strong> Expanda a fase para ver a descrição completa</li>
                 <li>• <strong>Etapas dentro das fases:</strong> Registre seu progresso (ex: Etapa 4 de 9)</li>
-                <li>• <strong>Anexe evidências:</strong> Adicione pelo menos 1 arquivo ou link para cada fase</li>
+                <li>• <strong>⚠️ IMPORTANTE - Anexe evidências:</strong> Se você preencher a descrição de uma fase, deve adicionar pelo menos 1 arquivo ou link</li>
+                <li>• <strong>Arrastar e Soltar:</strong> Arraste arquivos diretamente nas opções ou clique para selecionar</li>
                 <li>• <strong>Atualize quando quiser:</strong> Volte aqui para registrar novos avanços</li>
-                <li>• <strong>Marque o status:</strong> Clique no badge para atualizar (Não Iniciada → Em Andamento → Concluída)</li>
+                <li>• <strong>Marque o status:</strong> Clique no badge colorido para atualizar (Não Iniciada → Em Andamento → Concluída)</li>
               </ul>
             </div>
           </div>
@@ -522,6 +529,21 @@ const TimelineProgressStep: React.FC<TimelineProgressStepProps> = ({
                       className="overflow-hidden"
                     >
                       <div className="p-6 space-y-6">
+                        {/* Phase Explanation */}
+                        <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                          <div className="flex gap-3">
+                            <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                            <div>
+                              <h4 className="text-sm font-bold text-blue-900 dark:text-blue-100 mb-1">
+                                O que é esta fase?
+                              </h4>
+                              <p className="text-sm text-blue-800 dark:text-blue-200 leading-relaxed">
+                                {phase.explanation}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
                         <div>
                           <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                             Descrição da Fase

@@ -181,13 +181,17 @@ const ImprovedCreateProjectPage = () => {
         break
       
       case 'timeline':
-        // Timeline é opcional - não bloqueia publicação
-        // Mas se preenchida deve ter título e descrição
-        const invalidTimeline = formData.timelineSteps.some(
-          step => step.description && !step.title
+        // Timeline é opcional - mas se preenchida deve ter pelo menos 1 anexo por fase
+        const phasesWithContent = formData.timelineSteps?.filter(
+          (step: any) => step.description && step.description.trim().length > 0
+        ) || []
+        
+        const phasesWithoutAttachments = phasesWithContent.filter(
+          (step: any) => !step.attachments || step.attachments.length === 0
         )
-        if (invalidTimeline) {
-          newErrors.timeline = 'Etapas com descrição devem ter um título'
+        
+        if (phasesWithoutAttachments.length > 0) {
+          newErrors.timeline = `${phasesWithoutAttachments.length} fase(s) com descrição precisam de pelo menos um anexo (arquivo ou link)`
         }
         break
     }
